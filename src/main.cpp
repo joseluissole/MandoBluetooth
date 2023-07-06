@@ -59,29 +59,34 @@ void notify()
     if(Ps3.event.button_down.ps){
     Ps3.setPlayer(1);
     //parada robot
-    roboclaw_IZQUIERDO.SpeedAccelM1(address,acceleration,0);
-    roboclaw_IZQUIERDO.SpeedAccelM2(address,acceleration,0);
+    VM1 = 0;
+    VM2 = 0;
 
-    roboclaw_DERECHO.SpeedAccelM1(address,acceleration,0);
-    roboclaw_DERECHO.SpeedAccelM2(address,acceleration,0);
+    VM3 = 0;
+    VM4 = 0;
 
     habilitado = 0;
     }
 
+  //parada de motores
+    
     if( Ps3.event.button_down.cross )
-      parar = 1;
+    {
+      VM1 = 0;
+      VM2 = 0;
+    
+      VM3 = 0;
+      VM4 = 0;
+    }
 
+    //obtención velocidades
+    
     LeftX = Ps3.data.analog.stick.lx;
     LeftY = Ps3.data.analog.stick.ly;
 
     RightX = Ps3.data.analog.stick.rx;
     RightY = Ps3.data.analog.stick.ry;
 
-    VM1_i = (-1) * mul_speed * (LeftY - RightX - LeftX + RightY);
-    VM2_i = (-1) * mul_speed * (LeftY - RightX + LeftX + RightY);
-
-    VM3_i = (-1) * mul_speed * (LeftY + RightX - LeftX + RightY);
-    VM4_i = (-1) * mul_speed * (LeftY + RightX + LeftX + RightY);
   }
   else{
 
@@ -131,27 +136,25 @@ void loop()
       return;
       
         
-
-    //parada de motores
     
-    if(parar == 1)
+    
+    //paro
+    if(abs(LeftX) < VMin & abs(LeftY) < VMin & abs(RightX) < VMin & abs(RightY) < VMin )
     {
-      roboclaw_IZQUIERDO.SpeedM1(address,0);
-      roboclaw_IZQUIERDO.SpeedM2(address,0);
+      VM1 = 0;
+      VM2 = 0;
 
-      roboclaw_DERECHO.SpeedM1(address,0);
-      roboclaw_DERECHO.SpeedM2(address,0);
+      VM3 = 0;
+      VM4 = 0;
+    }
+    else{
+      VM1 = (-1) * mul_speed * (LeftY - RightX - LeftX + RightY);
+      VM2 = (-1) * mul_speed * (LeftY - RightX + LeftX + RightY);
 
-      parar = 0;
+      VM3 = (-1) * mul_speed * (LeftY + RightX - LeftX + RightY);
+      VM4 = (-1) * mul_speed * (LeftY + RightX + LeftX + RightY);
 
     }
-    
-
-    //Imprimir caracteres velocidades motores
-    VM1 = VM1_i;
-    VM2 = VM2_i;
-    VM3 = VM3_i;
-    VM4 = VM4_i;
 
     //velocidades
     roboclaw_IZQUIERDO.SpeedAccelM1(address,acceleration,VM1);
@@ -160,15 +163,6 @@ void loop()
     roboclaw_DERECHO.SpeedAccelM1(address,acceleration,VM3);
     roboclaw_DERECHO.SpeedAccelM2(address,acceleration,VM4);
 
-    //paro
-    if(abs(LeftX) < VMin & abs(LeftY) < VMin & abs(RightX) < VMin & abs(RightY) < VMin )
-    {
-    roboclaw_IZQUIERDO.SpeedAccelM1(address,acceleration,0);
-    roboclaw_IZQUIERDO.SpeedAccelM2(address,acceleration,0);
-
-    roboclaw_DERECHO.SpeedAccelM1(address,acceleration,0);
-    roboclaw_DERECHO.SpeedAccelM2(address,acceleration,0);
-    }
       
 
     //Imprime valores joysticks
