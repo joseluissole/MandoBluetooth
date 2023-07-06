@@ -14,7 +14,7 @@ int habilitado = 0;
 int LeftX = 0, LeftY = 0, RightX = 0, RightY = 0;
 //definicion velocidades 
 int VM1 = 0, VM2 = 0, VM3 = 0, VM4 = 0;
-int VM1_i = 0, VM2_i = 0, VM3_i = 0, VM4_i = 0;
+
 
 //PIDs: Kd,Kp,Ki,QPPS
 const float PID_M1[4] = {0.0,0.31516,0.04771,84750.0};
@@ -59,11 +59,9 @@ void notify()
     if(Ps3.event.button_down.ps){
     Ps3.setPlayer(1);
     //parada robot
-    VM1 = 0;
-    VM2 = 0;
+    roboclaw_IZQUIERDO.SpeedM1M2(address,0,0);
 
-    VM3 = 0;
-    VM4 = 0;
+    roboclaw_DERECHO.SpeedM1M2(address,0,0);
 
     habilitado = 0;
     }
@@ -72,11 +70,9 @@ void notify()
     
     if( Ps3.event.button_down.cross )
     {
-      VM1 = 0;
-      VM2 = 0;
-    
-      VM3 = 0;
-      VM4 = 0;
+    roboclaw_IZQUIERDO.SpeedM1M2(address,0,0);
+
+    roboclaw_DERECHO.SpeedM1M2(address,0,0);
     }
 
     //obtención velocidades
@@ -148,22 +144,18 @@ void loop()
       VM4 = 0;
     }
     else{
-      VM1 = (-1) * mul_speed * (LeftY - RightX - LeftX + RightY);
-      VM2 = (-1) * mul_speed * (LeftY - RightX + LeftX + RightY);
+      VM1 = (-1) * mul_speed * (LeftY - RightX + LeftX + RightY);
+      VM2 = (-1) * mul_speed * (LeftY - RightX - LeftX + RightY);
 
-      VM3 = (-1) * mul_speed * (LeftY + RightX - LeftX + RightY);
-      VM4 = (-1) * mul_speed * (LeftY + RightX + LeftX + RightY);
+      VM3 = (-1) * mul_speed * (LeftY + RightX + LeftX + RightY);
+      VM4 = (-1) * mul_speed * (LeftY + RightX - LeftX + RightY);
 
     }
 
     //velocidades
-    roboclaw_IZQUIERDO.SpeedAccelM1(address,acceleration,VM1);
-    roboclaw_IZQUIERDO.SpeedAccelM2(address,acceleration,VM2);
+    roboclaw_IZQUIERDO.SpeedAccelM1M2(address,acceleration,VM1,VM2);
 
-    roboclaw_DERECHO.SpeedAccelM1(address,acceleration,VM3);
-    roboclaw_DERECHO.SpeedAccelM2(address,acceleration,VM4);
-
-      
+    roboclaw_DERECHO.SpeedAccelM1M2(address,acceleration,VM3,VM4);
 
     //Imprime valores joysticks
     cadena = String(LeftX) + ',' + String(LeftY) + ',' + String(RightX) + ',' + String(RightY) + '\n';
