@@ -58,6 +58,13 @@ void notify()
 
     if(Ps3.event.button_down.ps){
     Ps3.setPlayer(1);
+    //parada robot
+    roboclaw_IZQUIERDO.SpeedAccelM1(address,acceleration,0);
+    roboclaw_IZQUIERDO.SpeedAccelM2(address,acceleration,0);
+
+    roboclaw_DERECHO.SpeedAccelM1(address,acceleration,0);
+    roboclaw_DERECHO.SpeedAccelM2(address,acceleration,0);
+
     habilitado = 0;
     }
 
@@ -146,6 +153,7 @@ void loop()
     VM3 = VM3_i;
     VM4 = VM4_i;
 
+    //velocidades
     roboclaw_IZQUIERDO.SpeedAccelM1(address,acceleration,VM1);
     roboclaw_IZQUIERDO.SpeedAccelM2(address,acceleration,VM2);
 
