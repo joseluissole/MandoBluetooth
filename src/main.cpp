@@ -70,11 +70,11 @@ void notify()
     RightX = Ps3.data.analog.stick.rx;
     RightY = Ps3.data.analog.stick.ry;
 
-    VM1_i = (-1) * mul_speed * (LeftY - RightX - LeftX);
-    VM2_i = (-1) * mul_speed * (LeftY - RightX + LeftX);
+    VM1_i = (-1) * mul_speed * (LeftY - RightX - LeftX + RightY);
+    VM2_i = (-1) * mul_speed * (LeftY - RightX + LeftX + RightY);
 
-    VM3_i = (-1) * mul_speed * (LeftY + RightX - LeftX);
-    VM4_i = (-1) * mul_speed * (LeftY + RightX + LeftX);
+    VM3_i = (-1) * mul_speed * (LeftY + RightX - LeftX + RightY);
+    VM4_i = (-1) * mul_speed * (LeftY + RightX + LeftX + RightY);
   }
   else{
 
