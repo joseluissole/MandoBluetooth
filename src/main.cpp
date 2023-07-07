@@ -48,7 +48,7 @@ const int VMin = 10;
 
 int pos = 0; // variable to store the servo position
 
-//clava el robot en caso de emergencia
+// clava el robot en caso de emergencia
 void pararTodo()
 {
   VM1 = 0;
@@ -66,46 +66,33 @@ void pararTodo()
 void notify()
 {
 
-  // parada de motores
-
-  if (Ps3.event.button_down.cross)
+  if (habilitado == 1)
   {
-    pararTodo();
+
+    if (Ps3.event.button_down.ps)
+    {
+      Ps3.setPlayer(1);
+
+      habilitado = 0;
+      // parada robot
+    }
+
+    // obtención velocidades
+
+    LeftX = Ps3.data.analog.stick.lx;
+    LeftY = Ps3.data.analog.stick.ly;
+
+    RightX = Ps3.data.analog.stick.rx;
+    RightY = Ps3.data.analog.stick.ry;
   }
   else
   {
-    if (habilitado == 1)
+
+    if (Ps3.event.button_down.ps)
     {
+      Ps3.setPlayer(5);
 
-      if (Ps3.event.button_down.ps)
-      {
-        Ps3.setPlayer(1);
-
-        pararTodo();
-
-        habilitado = 0;
-        // parada robot
-      }
-
-      // obtención velocidades
-
-      LeftX = Ps3.data.analog.stick.lx;
-      LeftY = Ps3.data.analog.stick.ly;
-
-      RightX = Ps3.data.analog.stick.rx;
-      RightY = Ps3.data.analog.stick.ry;
-    }
-    else
-    {
-
-      if (Ps3.event.button_down.ps)
-      {
-        Ps3.setPlayer(5);
-
-        pararTodo();
-
-        habilitado = 1;
-      }
+      habilitado = 1;
     }
   }
 }
@@ -147,24 +134,30 @@ void loop()
   if (!Ps3.isConnected())
     return;
 
-  // paro
-  if (abs(LeftX) < VMin & abs(LeftY) < VMin & abs(RightX) < VMin & abs(RightY) < VMin)
+  if (Ps3.data.button.cross || Ps3.data.button.ps)
   {
-    VM1 = 0;
-    VM2 = 0;
-
-    VM3 = 0;
-    VM4 = 0;
+    pararTodo();
   }
   else
   {
-    VM1 = (-1) * mul_speed * (2 * LeftY - RightX + LeftX);
-    VM2 = (-1) * mul_speed * (2 * LeftY - RightX - LeftX);
+    // paro
+    if (abs(LeftX) < VMin & abs(LeftY) < VMin & abs(RightX) < VMin & abs(RightY) < VMin)
+    {
+      VM1 = 0;
+      VM2 = 0;
 
-    VM3 = (-1) * mul_speed * (2 * LeftY + RightX + LeftX);
-    VM4 = (-1) * mul_speed * (2 * LeftY + RightX - LeftX);
+      VM3 = 0;
+      VM4 = 0;
+    }
+    else
+    {
+      VM1 = (-1) * mul_speed * (2 * LeftY - RightX + LeftX);
+      VM2 = (-1) * mul_speed * (2 * LeftY - RightX - LeftX);
+
+      VM3 = (-1) * mul_speed * (2 * LeftY + RightX + LeftX);
+      VM4 = (-1) * mul_speed * (2 * LeftY + RightX - LeftX);
+    }
   }
-
   // velocidades
   roboclaw_IZQUIERDO.SpeedAccelM1M2(address, acceleration, VM1, VM2);
 
