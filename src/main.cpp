@@ -54,7 +54,17 @@ int pos = 0;    // variable to store the servo position
 void notify()
 {
 
-  if(habilitado == 1){
+  //parada de motores
+    
+  if( Ps3.event.button_down.cross )
+  {
+  roboclaw_IZQUIERDO.SpeedM1M2(address,0,0);
+
+  roboclaw_DERECHO.SpeedM1M2(address,0,0);
+  }
+  else
+  {
+      if(habilitado == 1){
 
     if(Ps3.event.button_down.ps){
     Ps3.setPlayer(1);
@@ -64,15 +74,6 @@ void notify()
     roboclaw_DERECHO.SpeedM1M2(address,0,0);
 
     habilitado = 0;
-    }
-
-  //parada de motores
-    
-    if( Ps3.event.button_down.cross )
-    {
-    roboclaw_IZQUIERDO.SpeedM1M2(address,0,0);
-
-    roboclaw_DERECHO.SpeedM1M2(address,0,0);
     }
 
     //obtención velocidades
@@ -92,6 +93,9 @@ void notify()
     }
 
   }
+  }
+
+  
 }
 
 void onConnect()
@@ -144,11 +148,11 @@ void loop()
       VM4 = 0;
     }
     else{
-      VM1 = (-1) * mul_speed * (LeftY - RightX + LeftX + RightY);
-      VM2 = (-1) * mul_speed * (LeftY - RightX - LeftX + RightY);
+      VM1 = (-1) * mul_speed * (2*LeftY - RightX + LeftX);
+      VM2 = (-1) * mul_speed * (2*LeftY - RightX - LeftX);
 
-      VM3 = (-1) * mul_speed * (LeftY + RightX + LeftX + RightY);
-      VM4 = (-1) * mul_speed * (LeftY + RightX - LeftX + RightY);
+      VM3 = (-1) * mul_speed * (2*LeftY + RightX + LeftX);
+      VM4 = (-1) * mul_speed * (2*LeftY + RightX - LeftX);
 
     }
 
