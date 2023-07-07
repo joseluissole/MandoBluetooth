@@ -134,7 +134,7 @@ void loop()
   if (!Ps3.isConnected())
     return;
 
-  if (Ps3.data.button.cross || Ps3.data.button.ps)
+  if (Ps3.data.button.cross || Ps3.data.button.ps)  //calvada instantanea
   {
     pararTodo();
   }
