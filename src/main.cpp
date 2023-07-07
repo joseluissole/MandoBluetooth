@@ -76,14 +76,6 @@ void notify()
       habilitado = 0;
       // parada robot
     }
-
-    // obtención velocidades
-
-    LeftX = Ps3.data.analog.stick.lx;
-    LeftY = Ps3.data.analog.stick.ly;
-
-    RightX = Ps3.data.analog.stick.rx;
-    RightY = Ps3.data.analog.stick.ry;
   }
   else
   {
@@ -131,10 +123,23 @@ void setup()
 
 void loop()
 {
+  // Sale del bucle si no hay un mando conectado
   if (!Ps3.isConnected())
+  {
+    pararTodo();
     return;
+  }
 
-  if (Ps3.data.button.cross || Ps3.data.button.ps)  //calvada instantanea
+  // obtención velocidades
+
+  LeftX = Ps3.data.analog.stick.lx;
+  LeftY = Ps3.data.analog.stick.ly;
+
+  RightX = Ps3.data.analog.stick.rx;
+  RightY = Ps3.data.analog.stick.ry;
+
+//clavada instantanea
+  if (Ps3.data.button.cross || Ps3.data.button.ps || habilitado == 0) 
   {
     pararTodo();
   }
