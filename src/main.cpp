@@ -48,6 +48,7 @@ const int VMin = 10;
 
 int pos = 0; // variable to store the servo position
 
+//clava el robot en caso de emergencia
 void pararTodo()
 {
   VM1 = 0;
@@ -80,11 +81,10 @@ void notify()
       {
         Ps3.setPlayer(1);
 
-      pararTodo();
+        pararTodo();
 
         habilitado = 0;
         // parada robot
-        
       }
 
       // obtención velocidades
@@ -101,6 +101,9 @@ void notify()
       if (Ps3.event.button_down.ps)
       {
         Ps3.setPlayer(5);
+
+        pararTodo();
+
         habilitado = 1;
       }
     }
@@ -147,7 +150,11 @@ void loop()
   // paro
   if (abs(LeftX) < VMin & abs(LeftY) < VMin & abs(RightX) < VMin & abs(RightY) < VMin)
   {
-    pararTodo();
+    VM1 = 0;
+    VM2 = 0;
+
+    VM3 = 0;
+    VM4 = 0;
   }
   else
   {
