@@ -9,8 +9,6 @@ int player = 0;
 int battery = 0;
 
 int parar = 0;
-int habilitado = 0;
-
 int LeftX = 0, LeftY = 0, RightX = 0, RightY = 0;
 // definicion velocidades
 int VM1 = 0, VM2 = 0, VM3 = 0, VM4 = 0;
@@ -65,28 +63,6 @@ void pararTodo()
 // Interrupción ante evento del mando
 void notify()
 {
-
-  if (habilitado == 1)
-  {
-
-    if (Ps3.event.button_down.ps)
-    {
-      Ps3.setPlayer(1);
-
-      habilitado = 0;
-      // parada robot
-    }
-  }
-  else
-  {
-
-    if (Ps3.event.button_down.ps)
-    {
-      Ps3.setPlayer(5);
-
-      habilitado = 1;
-    }
-  }
 }
 
 void onConnect()
@@ -110,7 +86,7 @@ void setup()
   Ps3.attach(notify);
   Ps3.attachOnConnect(onConnect);
   Ps3.attachOnDisconnect(OnDisconnect);
-  Ps3.begin("01:02:03:04:05:06");
+  Ps3.begin(/*"01:02:03:04:05:06"*/);
   /*
     roboclaw_IZQUIERDO.SetM1VelocityPID(address,PID_M1[0],PID_M1[1],PID_M1[2],PID_M1[3]);
     roboclaw_IZQUIERDO.SetM2VelocityPID(address,PID_M2[0],PID_M2[1],PID_M2[2],PID_M2[3]);
@@ -126,6 +102,7 @@ void loop()
   // Sale del bucle si no hay un mando conectado
   if (!Ps3.isConnected())
   {
+    //Serial.println("Desconectado");
     pararTodo();
     return;
   }
@@ -138,10 +115,15 @@ void loop()
   RightX = Ps3.data.analog.stick.rx;
   RightY = Ps3.data.analog.stick.ry;
 
-//clavada instantanea
-  if (Ps3.data.button.cross || Ps3.data.button.ps || habilitado == 0) 
+  // clavada instantanea
+  if (Ps3.data.button.cross)
   {
     pararTodo();
+  }
+  else if(Ps3.data.button.ps)
+  {
+    pararTodo();
+    ESP.restart();
   }
   else
   {
