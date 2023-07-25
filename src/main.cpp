@@ -7,6 +7,9 @@
 
 #include <spslib.h>
 
+using namespace SPS;
+using namespace std;
+
 int player = 0;
 int battery = 0;
 
@@ -47,6 +50,9 @@ RoboClaw roboclaw_DERECHO(&Serial2, 10000);
 const int VMin = 10;
 
 int pos = 0; // variable to store the servo position
+
+//paquete de mensaje
+typedef Message<10> mensaje;
 
 // clava el robot en caso de emergencia
 void pararTodo()
