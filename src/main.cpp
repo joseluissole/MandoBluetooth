@@ -5,6 +5,8 @@
 
 #include <cstring>
 
+#include <spslib.h>
+
 int player = 0;
 int battery = 0;
 

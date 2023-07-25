@@ -1,0 +1,7 @@
+C:/Users/Alumno/Documents/PlatformIO/Projects/MandoBluetooth/build/CMakeFiles/unity.dir
+C:/Users/Alumno/Documents/PlatformIO/Projects/MandoBluetooth/build/CMakeFiles/edit_cache.dir
+C:/Users/Alumno/Documents/PlatformIO/Projects/MandoBluetooth/build/CMakeFiles/rebuild_cache.dir
+C:/Users/Alumno/Documents/PlatformIO/Projects/MandoBluetooth/build/CMakeFiles/list_install_components.dir
+C:/Users/Alumno/Documents/PlatformIO/Projects/MandoBluetooth/build/CMakeFiles/install.dir
+C:/Users/Alumno/Documents/PlatformIO/Projects/MandoBluetooth/build/CMakeFiles/install/local.dir
+C:/Users/Alumno/Documents/PlatformIO/Projects/MandoBluetooth/build/CMakeFiles/install/strip.dir
