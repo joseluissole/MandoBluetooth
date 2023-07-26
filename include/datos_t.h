@@ -50,9 +50,11 @@ class datos_t
     int mul_speed;
     int VMin;
 
-    public:
-    Mando_t Mando;
     Velocidad_t Velocidad;
+    Mando_t Mando;
+
+    public:
+    
 
     RoboClaw roboclaw_IZQUERDO, roboclaw_DERECHO;
 
@@ -69,6 +71,12 @@ class datos_t
     void begin();
 
     bool actualizarVelocidad();
+    bool actualizarVelocidad(int vm1, int vm2, int vm3, int vm4);
+
+    bool clavar();
+    bool clavar(int vm1, int vm2, int vm3, int vm4);
+
+    Velocidad_t& obtenerVelocidad();
 
     void pararTodo();
 

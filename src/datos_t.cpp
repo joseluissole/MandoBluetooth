@@ -22,7 +22,7 @@ void datos_t::pararTodo()
 {
 
     Velocidad.reset();
-    actualizarVelocidad();
+    clavar();
 
 }
 
@@ -30,6 +30,36 @@ bool datos_t::actualizarVelocidad()
 {
 
     return roboclaw_IZQUERDO.SpeedAccelM1M2(address1, acceleration, Velocidad.VM1, Velocidad.VM2) && roboclaw_DERECHO.SpeedAccelM1M2(address2, acceleration, Velocidad.VM3, Velocidad.VM4);
+}
+
+bool datos_t::actualizarVelocidad(int vm1, int vm2, int vm3, int vm4)
+{
+    Velocidad.VM1=vm1;
+    Velocidad.VM2=vm2;
+    Velocidad.VM3=vm3;
+    Velocidad.VM4=vm4;
+
+    return actualizarVelocidad();
+}
+
+bool datos_t::clavar()
+{
+    return roboclaw_IZQUERDO.SpeedM1M2(address1, Velocidad.VM1, Velocidad.VM2) && roboclaw_DERECHO.SpeedM1M2(address2, Velocidad.VM3, Velocidad.VM4);
+}
+
+bool datos_t::clavar(int vm1, int vm2, int vm3, int vm4)
+{
+    Velocidad.VM1=vm1;
+    Velocidad.VM2=vm2;
+    Velocidad.VM3=vm3;
+    Velocidad.VM4=vm4;
+
+    return clavar();
+}
+
+Velocidad_t &datos_t::obtenerVelocidad()
+{
+    return Velocidad;
 }
 
 void datos_t::modoManual()

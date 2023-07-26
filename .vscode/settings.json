@@ -1,4 +1,5 @@
 {
-    "idf.portWin": "COM1",
-    "cmake.sourceDirectory": "C:/Users/Alumno/Documents/PlatformIO/Projects/MandoBluetooth/.pio/libdeps/esp32dev/Unity"
+    "idf.portWin": "COM3",
+    "cmake.sourceDirectory": "C:/Users/Alumno/Documents/PlatformIO/Projects/MandoBluetooth/.pio/libdeps/esp32dev/Unity",
+    "idf.flashType": "UART"
 }
