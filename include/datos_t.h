@@ -1,11 +1,20 @@
+#define LINKEDSTACKTYPE_H
+#ifndef LINKEDSTACKTYPE_H
+#endif
+
 #include <stdint.h>
 #include <RoboClaw.h>
 #include <Ps3Controller.h>
 #include <Arduino.h>
+#include "spslib.h"
 
 #include "Mando_t.h"
 #include "Velocidad_t.h"
 
+using namespace SPS;
+using namespace std;
+
+typedef Message<> Mensaje;
 
 class datos_t
 {
@@ -14,7 +23,7 @@ class datos_t
 
     uint8_t address1, address2;
 
-    HardwareSerial *HS1, *HS2;
+    HardwareSerial *HS1, *HS2, *HS0;
 
     int acceleration;
     int mul_speed;
@@ -22,6 +31,10 @@ class datos_t
 
     Velocidad_t Velocidad;
     Mando_t Mando;
+    
+    Mensaje Vel_Mess;
+    int velocidadesMotores[4];
+    static Mensaje::MsgReader reader;
 
     public:
     
@@ -32,7 +45,7 @@ class datos_t
 
     
 
-    datos_t(int accel, int mul_s, int vmin, Ps3Controller * ctrl = &Ps3, int br = 38400, uint8_t a1 = 0x80, uint8_t a2 = 0x80, HardwareSerial * hs1 = &Serial1, HardwareSerial * hs2 = &Serial2) : acceleration(accel), mul_speed(mul_s),VMin(vmin), controlador(ctrl), baudRate(br), address1(a1), address2(a2),HS1(hs1), HS2(hs2), roboclaw_IZQUERDO(hs1,1000), roboclaw_DERECHO(hs2,1000)
+    datos_t(int accel, int mul_s, int vmin, Ps3Controller * ctrl = &Ps3, int br = 38400, uint8_t a1 = 0x80, uint8_t a2 = 0x80, HardwareSerial * hs1 = &Serial1, HardwareSerial * hs2 = &Serial2, HardwareSerial * hs0 = &Serial) : acceleration(accel), mul_speed(mul_s),VMin(vmin), controlador(ctrl), baudRate(br), address1(a1), address2(a2),HS1(hs1), HS2(hs2), HS0(hs0), roboclaw_IZQUERDO(hs1,1000), roboclaw_DERECHO(hs2,1000), Vel_Mess(10)
     {
 
     }
@@ -52,6 +65,9 @@ class datos_t
     void pararTodo();
 
     void modoManual();
+
+    bool enviarVelocidad();
+    bool recibirMensaje();
 
 };
 

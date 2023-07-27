@@ -3,11 +3,10 @@
 
 #include <cstring>
 
-#include <spslib.h>
 
 #include "datos_t.h"
 
-using namespace SPS;
+
 using namespace std;
 
 
@@ -44,7 +43,7 @@ datos_t Dato(acceleration, mul_speed, VMin);
 int pos = 0; // variable to store the servo position
 
 // paquete de mensaje
-typedef Message<10> mensaje;
+
 
 // clava el robot en caso de emergencia
 
