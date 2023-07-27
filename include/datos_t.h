@@ -34,7 +34,7 @@ class datos_t
     
     Mensaje Vel_Mess;
     int velocidadesMotores[4];
-    static Mensaje::MsgReader reader;
+    Mensaje::MsgReader reader;
 
     public:
     

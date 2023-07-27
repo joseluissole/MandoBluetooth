@@ -128,7 +128,7 @@ bool datos_t::recibirMensaje()
 {
     while (HS0->available())
     {
-        if (reader.add_uchar((uchar_t)HS0->read()))
+        if (reader.add_uchar(HS0->read()))
         {
             auto m = reader.getMessage();
 
@@ -143,11 +143,8 @@ bool datos_t::recibirMensaje()
                 Velocidad.VM3 = velocidadesMotores[2];
                 Velocidad.VM4 = velocidadesMotores[3];
 
-                actualizarVelocidad();
+                return enviarVelocidad();
 
-                enviarVelocidad();
-
-                return true;
             }
             break;
 

@@ -1,14 +1,10 @@
 #include <Arduino.h>
 
-
 #include <cstring>
-
 
 #include "datos_t.h"
 
-
 using namespace std;
-
 
 // PIDs: Kd,Kp,Ki,QPPS
 const float PID_M1[4] = {0.0, 0.31516, 0.04771, 84750.0};
@@ -43,7 +39,6 @@ datos_t Dato(acceleration, mul_speed, VMin);
 int pos = 0; // variable to store the servo position
 
 // paquete de mensaje
-
 
 // clava el robot en caso de emergencia
 
@@ -80,22 +75,22 @@ void setup()
 void loop()
 {
   // Sale del bucle si no hay un mando conectado
-  if (!Dato.controlador->isConnected())
+  if (Dato.controlador->isConnected())
   {
     // Serial.println("Desconectado");
-    Dato.pararTodo();
-    return;
+    Dato.modoManual();
   }
-
-  // obtención velocidades
-
-  Dato.modoManual();
+  else
+  {
+    // obtención velocidades
+    Dato.recibirMensaje();
+  }
 
   // velocidades
 
   Dato.actualizarVelocidad();
 
   // Imprime valores joysticks
-  //cadena = String(LeftX) + ',' + String(LeftY) + ',' + String(RightX) + ',' + String(RightY) + '\n';
-  //Serial.print(cadena);
+  // cadena = String(LeftX) + ',' + String(LeftY) + ',' + String(RightX) + ',' + String(RightY) + '\n';
+  // Serial.print(cadena);
 }
