@@ -42,6 +42,7 @@ class datos_t
 
     bool actualizarVelocidad();
     bool actualizarVelocidad(int vm1, int vm2, int vm3, int vm4);
+    bool actualizarVelocidad(const Velocidad_t& V);
 
     bool clavar();
     bool clavar(int vm1, int vm2, int vm3, int vm4);

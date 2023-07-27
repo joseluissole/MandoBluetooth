@@ -42,6 +42,16 @@ bool datos_t::actualizarVelocidad(int vm1, int vm2, int vm3, int vm4)
     return actualizarVelocidad();
 }
 
+bool datos_t::actualizarVelocidad(const Velocidad_t &V)
+{
+    Velocidad.VM1=V.VM1;
+    Velocidad.VM2=V.VM2;
+    Velocidad.VM3=V.VM3;
+    Velocidad.VM4=V.VM4;
+
+    return actualizarVelocidad();
+}
+
 bool datos_t::clavar()
 {
     return roboclaw_IZQUERDO.SpeedM1M2(address1, Velocidad.VM1, Velocidad.VM2) && roboclaw_DERECHO.SpeedM1M2(address2, Velocidad.VM3, Velocidad.VM4);
