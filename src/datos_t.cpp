@@ -112,8 +112,8 @@ bool datos_t::actualizarVelocidad(const Velocidad_t &V)
 bool datos_t::actualizarVelocidad(float VX, float VY, float WZ)
 {
     Velocidad_Ojetivo[1] = VY;
-    Velocidad_Ojetivo[1] = VX;
-    Velocidad_Ojetivo[1] = WZ;
+    Velocidad_Ojetivo[0] = VX;
+    Velocidad_Ojetivo[2] = WZ;
 
     return actualizarVelocidad();
 }
@@ -162,18 +162,14 @@ bool datos_t::modoManual()
         // paro
         if (abs(Mando.LeftX) < VMin & abs(Mando.LeftY) < VMin & abs(Mando.RightX) < VMin & abs(Mando.RightY) < VMin)
         {
-            Velocidad_Ojetivo[1] = 0.0f;
-            Velocidad_Ojetivo[0] = 0.0f;
-            Velocidad_Ojetivo[2] = 0.0f;
+            return pararTodo();
         }
         else
         {
-            Velocidad_Ojetivo[1] = (-1.0f) * (float)Mando.LeftY * mul_speed;
-            Velocidad_Ojetivo[0] = (float)Mando.LeftX * mul_speed;
-            Velocidad_Ojetivo[2] = (-1.0f) * (float)Mando.RightX * mul_speed_giro;
+            return actualizarVelocidad((float)Mando.LeftX * mul_speed,(-1.0f) * (float)Mando.LeftY * mul_speed,(-1.0f) * (float)Mando.RightX * mul_speed_giro);
         }
 
-        return actualizarVelocidad();
+        
     }
 }
 
