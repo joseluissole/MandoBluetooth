@@ -92,7 +92,7 @@ void loop()
   }
 
   // velocidades
-
+  Dato.actualizarVelocidad();
 
   // Imprime valores joysticks
   // cadena = String(LeftX) + ',' + String(LeftY) + ',' + String(RightX) + ',' + String(RightY) + '\n';

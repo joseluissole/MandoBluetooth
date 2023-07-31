@@ -116,6 +116,7 @@ bool datos_t::actualizarVelocidad(float VX, float VY, float WZ)
     Velocidad_Ojetivo[2] = WZ;
 
     return actualizarVelocidad();
+
 }
 
 bool datos_t::clavar()
@@ -166,10 +167,12 @@ bool datos_t::modoManual()
         }
         else
         {
-            return actualizarVelocidad((float)Mando.LeftX * mul_speed,(-1.0f) * (float)Mando.LeftY * mul_speed,(-1.0f) * (float)Mando.RightX * mul_speed_giro);
-        }
+            Velocidad_Ojetivo[0] = (float)Mando.LeftX * mul_speed;
+            Velocidad_Ojetivo[1] = (-1.0f) * (float)Mando.LeftY * mul_speed;
+            Velocidad_Ojetivo[2] = (-1.0f) * (float)Mando.RightX * mul_speed_giro;
 
-        
+            return true;
+        }
     }
 }
 
