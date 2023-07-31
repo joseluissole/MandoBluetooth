@@ -29,13 +29,17 @@ String cadena;
 #define address 0x80
 // declaracion robovlaws
 
-#define acceleration 0.5f //tiempo de acerlacion en segudnos
+#define acceleration 1.0f // tiempo de acerlacion en segudnos
 #define mul_speed 400.0f
 #define mul_speed_giro 400.0f
 
-const int VMin = 10;
+#define VMin 10
 
-datos_t Dato(acceleration, mul_speed, mul_speed_giro, VMin);
+#define RADIO 0.076f
+#define Length 0.68181f
+#define Width 0.68181f
+
+datos_t Dato(acceleration, mul_speed, mul_speed_giro, VMin, Length, Width, RADIO);
 
 int pos = 0; // variable to store the servo position
 
@@ -70,7 +74,7 @@ void setup()
 
   Dato.begin(TXD1, RXD1, TXD2, RXD2);
 
-  //Serial.println("Ready.");
+  // Serial.println("Ready.");
 }
 
 void loop()
@@ -89,7 +93,6 @@ void loop()
 
   // velocidades
 
-  Dato.actualizarVelocidad();
 
   // Imprime valores joysticks
   // cadena = String(LeftX) + ',' + String(LeftY) + ',' + String(RightX) + ',' + String(RightY) + '\n';
