@@ -29,12 +29,13 @@ String cadena;
 #define address 0x80
 // declaracion robovlaws
 
-#define acceleration 20000
-#define mul_speed 250
+#define acceleration 0.5f //tiempo de acerlacion en segudnos
+#define mul_speed 400.0f
+#define mul_speed_giro 400.0f
 
 const int VMin = 10;
 
-datos_t Dato(acceleration, mul_speed, VMin);
+datos_t Dato(acceleration, mul_speed, mul_speed_giro, VMin);
 
 int pos = 0; // variable to store the servo position
 
@@ -69,7 +70,7 @@ void setup()
 
   Dato.begin(TXD1, RXD1, TXD2, RXD2);
 
-  Serial.println("Ready.");
+  //Serial.println("Ready.");
 }
 
 void loop()
