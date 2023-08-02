@@ -115,7 +115,7 @@ bool datos_t::actualizarVelocidad(float VX, float VY, float WZ)
     Velocidad_Ojetivo[0] = VX;
     Velocidad_Ojetivo[2] = WZ;
 
-    return actualizarVelocidad();
+    return true;
 }
 
 bool datos_t::clavar()
