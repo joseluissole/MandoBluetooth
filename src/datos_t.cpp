@@ -25,7 +25,10 @@ bool datos_t::pararTodo()
 {
 
     Velocidad_Angular.reset();
-    return clavar();
+    Velocidad_Ojetivo[0] = 0.0f;
+    Velocidad_Ojetivo[1] = 0.0f;
+    Velocidad_Ojetivo[2] = 0.0f;
+    return roboclaw_IZQUERDO.SpeedM1M2(address1, 0, 0) && roboclaw_DERECHO.SpeedM1M2(address2, 0, 0);
 }
 
 bool datos_t::actualizarVelocidad()
@@ -219,9 +222,9 @@ bool datos_t::enviarVelocidad_Objetivo()
 
 bool datos_t::enviarVelocidad_Objetivo(int VX, int VY, int WZ)
 {
-    Velocidad_Ojetivo[0]=VX;
-    Velocidad_Ojetivo[0]=VY;
-    Velocidad_Ojetivo[0]=WZ;
+    Velocidad_Ojetivo[0] = VX;
+    Velocidad_Ojetivo[0] = VY;
+    Velocidad_Ojetivo[0] = WZ;
 
     Vel_Obj.write_array<int>(Velocidad_Ojetivo, 3);
 
