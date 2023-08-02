@@ -116,7 +116,6 @@ bool datos_t::actualizarVelocidad(float VX, float VY, float WZ)
     Velocidad_Ojetivo[2] = WZ;
 
     return actualizarVelocidad();
-
 }
 
 bool datos_t::clavar()
@@ -178,15 +177,56 @@ bool datos_t::modoManual()
 
 bool datos_t::enviarVelocidad()
 {
-    Velocidad_Angular_Anterior.VM1 = roboclaw_DERECHO.ReadSpeedM1(address2);
-    Velocidad_Angular_Anterior.VM2 = roboclaw_IZQUERDO.ReadSpeedM2(address1);
-    Velocidad_Angular_Anterior.VM3 = roboclaw_IZQUERDO.ReadSpeedM1(address1);
-    Velocidad_Angular_Anterior.VM4 = roboclaw_DERECHO.ReadSpeedM2(address2);
+    velocidadesMotores[0] = roboclaw_DERECHO.ReadSpeedM1(address2);
+    velocidadesMotores[1] = roboclaw_IZQUERDO.ReadSpeedM2(address1);
+    velocidadesMotores[2] = roboclaw_IZQUERDO.ReadSpeedM1(address1);
+    velocidadesMotores[3] = roboclaw_DERECHO.ReadSpeedM2(address2);
 
     Vel_Mess.write_array<int>(velocidadesMotores, 4);
 
     for (int i = 0; i < Vel_Mess.datagram_size(); i++)
         HS0->write(Vel_Mess[i]);
+
+    return true;
+}
+
+bool datos_t::enviarVelocidad(const Velocidad_t &V)
+{
+
+    velocidadesMotores[0] = V.VM1;
+    velocidadesMotores[1] = V.VM2;
+    velocidadesMotores[2] = V.VM3;
+    velocidadesMotores[3] = V.VM4;
+
+    Vel_Mess.write_array<int>(velocidadesMotores, 4);
+
+    for (int i = 0; i < Vel_Mess.datagram_size(); i++)
+        HS0->write(Vel_Mess[i]);
+
+    return true;
+}
+
+bool datos_t::enviarVelocidad_Objetivo()
+{
+
+    Vel_Obj.write_array<int>(Velocidad_Ojetivo, 3);
+
+    for (int i = 0; i < Vel_Obj.datagram_size(); i++)
+        HS0->write(Vel_Obj[i]);
+
+    return true;
+}
+
+bool datos_t::enviarVelocidad_Objetivo(int VX, int VY, int WZ)
+{
+    Velocidad_Ojetivo[0]=VX;
+    Velocidad_Ojetivo[0]=VY;
+    Velocidad_Ojetivo[0]=WZ;
+
+    Vel_Obj.write_array<int>(Velocidad_Ojetivo, 3);
+
+    for (int i = 0; i < Vel_Obj.datagram_size(); i++)
+        HS0->write(Vel_Obj[i]);
 
     return true;
 }
@@ -206,8 +246,14 @@ bool datos_t::recibirMensaje()
                 m.read_array<int>(velocidadesMotores, 4);
 
                 actualizarVelocidad(velocidadesMotores[0], velocidadesMotores[1], velocidadesMotores[2], velocidadesMotores[3]);
+            }
+            break;
 
-                return enviarVelocidad();
+            case 11:
+            {
+                m.read_array<int>(Velocidad_Ojetivo, 3);
+
+                actualizarVelocidad(Velocidad_Ojetivo[0], Velocidad_Ojetivo[1], Velocidad_Ojetivo[2]);
             }
             break;
 
