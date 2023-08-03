@@ -34,6 +34,7 @@ class datos_t
     float Length;
     float Width;
 
+    float reduccion;
     float Velocidad_Ojetivo[3] = {0.0f, 0.0f, 0.0f};
     float Vel_Ang[4] = {0.0f, 0.0f, 0.0f, 0.0f};
     float Accel_Ang[4] = {0.0f, 0.0f, 0.0f, 0.0f};
@@ -46,12 +47,18 @@ class datos_t
     int velocidadesMotores[4];
     Mensaje::MsgReader reader;
 
+    bool calcularAceleracion();
+    bool calcularVelocidad();
+    bool moverMotores();
+
+    bool clavar();
+
 public:
     RoboClaw roboclaw_IZQUERDO, roboclaw_DERECHO;
 
     Ps3Controller *controlador;
 
-    datos_t(float tmp, float mul_s, float mul_sg, int vmin, float L, float W, float R, Ps3Controller *ctrl = &Ps3, int br = 38400, uint8_t a1 = 0x80, uint8_t a2 = 0x80, HardwareSerial *hs1 = &Serial1, HardwareSerial *hs2 = &Serial2, HardwareSerial *hs0 = &Serial) : tiempo(tmp), mul_speed(mul_s), mul_speed_giro(mul_sg), VMin(vmin), Length(L), Width(W), RADIO(R), controlador(ctrl), baudRate(br), address1(a1), address2(a2), HS1(hs1), HS2(hs2), HS0(hs0), roboclaw_IZQUERDO(hs1, 1000), roboclaw_DERECHO(hs2, 1000), Vel_Mess(10), Vel_Obj(11)
+    datos_t(float tmp, float mul_s, float mul_sg, int vmin, float reducir, float L, float W, float R, Ps3Controller *ctrl = &Ps3, int br = 38400, uint8_t a1 = 0x80, uint8_t a2 = 0x80, HardwareSerial *hs1 = &Serial1, HardwareSerial *hs2 = &Serial2, HardwareSerial *hs0 = &Serial) : tiempo(tmp), mul_speed(mul_s), mul_speed_giro(mul_sg), VMin(vmin), reduccion(reducir), Length(L), Width(W), RADIO(R), controlador(ctrl), baudRate(br), address1(a1), address2(a2), HS1(hs1), HS2(hs2), HS0(hs0), roboclaw_IZQUERDO(hs1, 1000), roboclaw_DERECHO(hs2, 1000), Vel_Mess(10), Vel_Obj(11)
     {
     }
 
@@ -63,10 +70,10 @@ public:
     bool actualizarVelocidad(float VX, float VY, float WZ);
     bool actualizarVelocidad(const Velocidad_t &V);
 
-    bool clavar();
     bool clavar(int vm1, int vm2, int vm3, int vm4);
+    bool clavar(const Velocidad_t &V);
 
-    Velocidad_t &obtenerVelocidad();
+    const Velocidad_t &obtenerVelocidad();
 
     bool pararTodo();
 

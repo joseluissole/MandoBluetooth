@@ -30,22 +30,24 @@ String cadena;
 // declaracion robovlaws
 
 #define acceleration 1.0f // tiempo de acerlacion en segudnos
-#define mul_speed 400.0f
-#define mul_speed_giro 400.0f
+#define mul_speed 10.0f
+#define mul_speed_giro 10.0f
 
 #define VMin 10
+#define REDUCCION 40.0f
 
 #define RADIO 0.076f
 #define Length 0.68181f
 #define Width 0.68181f
 
-datos_t Dato(acceleration, mul_speed, mul_speed_giro, VMin, Length, Width, RADIO);
+datos_t Dato(acceleration, mul_speed, mul_speed_giro, VMin, REDUCCION, Length, Width, RADIO);
 
 int pos = 0; // variable to store the servo position
 
 // paquete de mensaje
 
-// clava el robot en caso de emergencia
+// segundo nucleo
+void segundoNucleo(void * pV);
 
 // Interrupción ante evento del mando
 void notify()
@@ -74,12 +76,23 @@ void setup()
 
   Dato.begin(TXD1, RXD1, TXD2, RXD2);
 
+  xTaskCreate(segundoNucleo, "mi_tarea", 10000, NULL, 1, NULL);
+
   // Serial.println("Ready.");
+}
+
+void segundoNucleo( void *pV)
+{
+  for(;;)
+  {
+    Dato.actualizarVelocidad();
+  }
+  
 }
 
 void loop()
 {
-  // Sale del bucle si no hay un mando conectado
+  // Sale del bucle si no haysegundoNucleo un mando conectado
   if (Dato.controlador->isConnected())
   {
     // Serial.println("Desconectado");
@@ -92,7 +105,7 @@ void loop()
   }
 
   // velocidades
-  Dato.actualizarVelocidad();
+  //Dato.actualizarVelocidad();
 
   // Imprime valores joysticks
   // cadena = String(LeftX) + ',' + String(LeftY) + ',' + String(RightX) + ',' + String(RightY) + '\n';
