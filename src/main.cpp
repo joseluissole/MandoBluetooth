@@ -7,12 +7,14 @@
 using namespace std;
 
 // PIDs: Kd,Kp,Ki,QPPS
+/*
 const float PID_M1[4] = {0.0, 0.31516, 0.04771, 84750.0};
 const float PID_M2[4] = {0.0, 0.30119, 0.04643, 82125.0};
 const float PID_M3[4] = {0.0, 0.20926, 0.03613, 78000.0};
 const float PID_M4[4] = {0.0, 0.20380, 0.03661, 79875.0};
+*/
 
-String cadena;
+//String cadena;
 
 // On Roboclaw set switch 1 and 6 on.
 
