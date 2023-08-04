@@ -44,12 +44,13 @@ class datos_t
 
     Mensaje Vel_Mess;
     Mensaje Vel_Obj;
-    int velocidadesMotores[4];
+    int velocidadesMotores[4] = {0, 0, 0, 0};
+    float miVelocidad[3] = {0.0f, 0.0f, 0.0f};
+    
     Mensaje::MsgReader reader;
 
     bool calcularAceleracion();
     bool calcularVelocidad();
-    bool moverMotores();
 
     bool clavar();
 
@@ -65,10 +66,11 @@ public:
     void begin(int TX1, int RX1, int TX2, int RX2);
     void begin();
 
-    bool actualizarVelocidad();
     bool actualizarVelocidad(int vm1, int vm2, int vm3, int vm4);
     bool actualizarVelocidad(float VX, float VY, float WZ);
     bool actualizarVelocidad(const Velocidad_t &V);
+
+    bool eviarVelocidadActual(float *VX, float *VY, float *WZ);
 
     bool clavar(int vm1, int vm2, int vm3, int vm4);
     bool clavar(const Velocidad_t &V);
@@ -82,6 +84,8 @@ public:
     bool enviarVelocidad();
     bool enviarVelocidad(const Velocidad_t &V);
     bool enviarVelocidad_Objetivo();
-    bool enviarVelocidad_Objetivo(int VX, int VY, int WZ);
+    bool enviarVelocidad_Objetivo(float VX, float VY, float WZ);
     bool recibirMensaje();
+
+    bool moverMotores();
 };

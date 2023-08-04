@@ -86,7 +86,7 @@ void segundoNucleo( void *pV)
 {
   for(;;)
   {
-    Dato.actualizarVelocidad();
+    Dato.moverMotores();
   }
   
 }

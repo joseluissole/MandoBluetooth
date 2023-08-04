@@ -20,7 +20,7 @@ bool datos_t::calcularAceleracion()
     Aceleracion.VM3 = trunc(Accel_Ang[2]);
     Aceleracion.VM4 = trunc(Accel_Ang[3]);
 
-    return moverMotores();
+    return true;
 }
 
 bool datos_t::calcularVelocidad()
@@ -69,12 +69,6 @@ bool datos_t::pararTodo()
     return roboclaw_IZQUERDO.SpeedM1M2(address1, 0, 0) && roboclaw_DERECHO.SpeedM1M2(address2, 0, 0);
 }
 
-bool datos_t::actualizarVelocidad()
-{
-
-    return calcularVelocidad();
-}
-
 bool datos_t::actualizarVelocidad(int vm1, int vm2, int vm3, int vm4)
 {
 
@@ -93,6 +87,20 @@ bool datos_t::actualizarVelocidad(const Velocidad_t &V)
     Velocidad_Angular = V;
 
     return calcularAceleracion();
+}
+
+bool datos_t::eviarVelocidadActual(float *VX, float *VY, float *WZ)
+{
+    Velocidad_Angular_Anterior.VM1 = roboclaw_DERECHO.ReadSpeedM1(address2);
+    Velocidad_Angular_Anterior.VM2 = roboclaw_IZQUERDO.ReadSpeedM2(address1);
+    Velocidad_Angular_Anterior.VM3 = roboclaw_IZQUERDO.ReadSpeedM1(address1);
+    Velocidad_Angular_Anterior.VM4 = roboclaw_DERECHO.ReadSpeedM2(address2);
+
+    *VX = (0 - Velocidad_Angular_Anterior.VM1 + Velocidad_Angular_Anterior.VM2 - Velocidad_Angular_Anterior.VM3 + Velocidad_Angular_Anterior.VM4) * (PI * RADIO) / (8 * reduccion);
+    *VY = (Velocidad_Angular_Anterior.VM1 + Velocidad_Angular_Anterior.VM2 + Velocidad_Angular_Anterior.VM3 + Velocidad_Angular_Anterior.VM4) * (PI * RADIO) / (8 * reduccion);
+    *WZ = (Velocidad_Angular_Anterior.VM1 - Velocidad_Angular_Anterior.VM2 - Velocidad_Angular_Anterior.VM3 + Velocidad_Angular_Anterior.VM4) * (PI * RADIO) / (4 * reduccion * (Length + Width));
+
+    return true;
 }
 
 bool datos_t::actualizarVelocidad(float VX, float VY, float WZ)
@@ -163,7 +171,7 @@ bool datos_t::modoManual()
             Velocidad_Ojetivo[1] = (-1.0f) * (float)Mando.LeftY * mul_speed;
             Velocidad_Ojetivo[2] = (-1.0f) * (float)Mando.RightX * mul_speed_giro;
 
-            return true;
+            return calcularVelocidad();
         }
     }
 }
@@ -207,8 +215,9 @@ bool datos_t::enviarVelocidad(const Velocidad_t &V)
 
 bool datos_t::enviarVelocidad_Objetivo()
 {
+    eviarVelocidadActual(&miVelocidad[0],&miVelocidad[1],&miVelocidad[2]);
 
-    Vel_Obj.write_array<int>(Velocidad_Ojetivo, 3);
+    Vel_Obj.write_array<int>(miVelocidad, 3);
 
     for (int i = 0; i < Vel_Obj.datagram_size(); i++)
         HS0->write(Vel_Obj[i]);
@@ -216,13 +225,13 @@ bool datos_t::enviarVelocidad_Objetivo()
     return true;
 }
 
-bool datos_t::enviarVelocidad_Objetivo(int VX, int VY, int WZ)
+bool datos_t::enviarVelocidad_Objetivo(float VX, float VY, float WZ)
 {
-    Velocidad_Ojetivo[0] = VX;
-    Velocidad_Ojetivo[0] = VY;
-    Velocidad_Ojetivo[0] = WZ;
+    miVelocidad[0] = VX;
+    miVelocidad[1] = VY;
+    miVelocidad[2] = WZ;
 
-    Vel_Obj.write_array<int>(Velocidad_Ojetivo, 3);
+    Vel_Obj.write_array<int>(miVelocidad, 3);
 
     for (int i = 0; i < Vel_Obj.datagram_size(); i++)
         HS0->write(Vel_Obj[i]);
