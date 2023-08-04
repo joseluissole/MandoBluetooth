@@ -58,7 +58,7 @@ public:
 
     Ps3Controller *controlador;
 
-    datos_t(float tmp, float mul_s, float mul_sg, int vmin, float reducir, float L, float W, float R, Ps3Controller *ctrl = &Ps3, int br = 38400, uint8_t a1 = 0x80, uint8_t a2 = 0x80, HardwareSerial *hs1 = &Serial1, HardwareSerial *hs2 = &Serial2, HardwareSerial *hs0 = &Serial) : tiempo(tmp), mul_speed(mul_s), mul_speed_giro(mul_sg), VMin(vmin), reduccion(reducir), Length(L), Width(W), RADIO(R), controlador(ctrl), baudRate(br), address1(a1), address2(a2), HS1(hs1), HS2(hs2), HS0(hs0), roboclaw_IZQUERDO(hs1, 1000), roboclaw_DERECHO(hs2, 1000), Vel_Mess(10), Vel_Obj(11)
+    datos_t(float tmp, float mul_s, float mul_sg, int vmin = 10, float reducir = 40.0f, float L = 0.68181f, float W = 0.68181f, float R = 0.076f, Ps3Controller *ctrl = &Ps3, int br = 38400, uint8_t a1 = 0x80, uint8_t a2 = 0x80, HardwareSerial *hs1 = &Serial1, HardwareSerial *hs2 = &Serial2, HardwareSerial *hs0 = &Serial) : tiempo(tmp), mul_speed(mul_s), mul_speed_giro(mul_sg), VMin(vmin), reduccion(reducir), Length(L), Width(W), RADIO(R), controlador(ctrl), baudRate(br), address1(a1), address2(a2), HS1(hs1), HS2(hs2), HS0(hs0), roboclaw_IZQUERDO(hs1, 1000), roboclaw_DERECHO(hs2, 1000), Vel_Mess(10), Vel_Obj(11)
     {
     }
 

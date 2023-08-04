@@ -30,8 +30,8 @@ String cadena;
 // declaracion robovlaws
 
 #define acceleration 1.0f // tiempo de acerlacion en segudnos
-#define mul_speed 10.0f
-#define mul_speed_giro 10.0f
+#define mul_speed 20.0f
+#define mul_speed_giro 20.0f
 
 #define VMin 10
 #define REDUCCION 40.0f
@@ -40,7 +40,7 @@ String cadena;
 #define Length 0.68181f
 #define Width 0.68181f
 
-datos_t Dato(acceleration, mul_speed, mul_speed_giro, VMin, REDUCCION, Length, Width, RADIO);
+datos_t Dato(acceleration, mul_speed, mul_speed_giro);
 
 int pos = 0; // variable to store the servo position
 
@@ -52,6 +52,7 @@ void segundoNucleo(void * pV);
 // Interrupción ante evento del mando
 void notify()
 {
+  Dato.modoManual();
 }
 
 void onConnect()
@@ -93,21 +94,12 @@ void segundoNucleo( void *pV)
 void loop()
 {
   // Sale del bucle si no haysegundoNucleo un mando conectado
-  if (Dato.controlador->isConnected())
+  if (!Dato.controlador->isConnected())
   {
-    // Serial.println("Desconectado");
-    Dato.modoManual();
-  }
-  else
-  {
-    // obtención velocidades
     Dato.recibirMensaje();
   }
 
-  // velocidades
-  //Dato.actualizarVelocidad();
+ 
 
-  // Imprime valores joysticks
-  // cadena = String(LeftX) + ',' + String(LeftY) + ',' + String(RightX) + ',' + String(RightY) + '\n';
-  // Serial.print(cadena);
 }
+
