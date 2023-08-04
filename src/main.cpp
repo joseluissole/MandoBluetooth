@@ -32,26 +32,29 @@ const float PID_M4[4] = {0.0, 0.20380, 0.03661, 79875.0};
 // declaracion robovlaws
 
 #define acceleration 1.0f // tiempo de acerlacion en segudnos
-#define mul_speed 400.0f
-#define mul_speed_giro 400.0f
+#define mul_speed 20.0f
+#define mul_speed_giro 20.0f
 
 #define VMin 10
+#define REDUCCION 40.0f
 
 #define RADIO 0.076f
 #define Length 0.68181f
 #define Width 0.68181f
 
-datos_t Dato(acceleration, mul_speed, mul_speed_giro, VMin, Length, Width, RADIO);
+datos_t Dato(acceleration, mul_speed, mul_speed_giro);
 
 int pos = 0; // variable to store the servo position
 
 // paquete de mensaje
 
-// clava el robot en caso de emergencia
+// segundo nucleo
+void segundoNucleo(void * pV);
 
 // Interrupción ante evento del mando
 void notify()
 {
+  Dato.modoManual();
 }
 
 void onConnect()
@@ -76,27 +79,29 @@ void setup()
 
   Dato.begin(TXD1, RXD1, TXD2, RXD2);
 
+  xTaskCreate(segundoNucleo, "mi_tarea", 10000, NULL, 1, NULL);
+
   // Serial.println("Ready.");
+}
+
+void segundoNucleo( void *pV)
+{
+  for(;;)
+  {
+    Dato.actualizarVelocidad();
+  }
+  
 }
 
 void loop()
 {
-  // Sale del bucle si no hay un mando conectado
-  if (Dato.controlador->isConnected())
+  // Sale del bucle si no haysegundoNucleo un mando conectado
+  if (!Dato.controlador->isConnected())
   {
-    // Serial.println("Desconectado");
-    Dato.modoManual();
-  }
-  else
-  {
-    // obtención velocidades
     Dato.recibirMensaje();
   }
 
-  // velocidades
-  Dato.actualizarVelocidad();
+ 
 
-  // Imprime valores joysticks
-  // cadena = String(LeftX) + ',' + String(LeftY) + ',' + String(RightX) + ',' + String(RightY) + '\n';
-  // Serial.print(cadena);
 }
+

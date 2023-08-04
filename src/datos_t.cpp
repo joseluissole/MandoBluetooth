@@ -1,6 +1,44 @@
 #include "datos_t.h"
 #include <math.h>
 
+bool datos_t::calcularAceleracion()
+{
+    // leo la velocidad actual en el motor
+    Velocidad_Angular_Anterior.VM1 = roboclaw_DERECHO.ReadSpeedM1(address2);
+    Velocidad_Angular_Anterior.VM2 = roboclaw_IZQUERDO.ReadSpeedM2(address1);
+    Velocidad_Angular_Anterior.VM3 = roboclaw_IZQUERDO.ReadSpeedM1(address1);
+    Velocidad_Angular_Anterior.VM4 = roboclaw_DERECHO.ReadSpeedM2(address2);
+
+    // calcula la aceleración que debe tener
+    Accel_Ang[0] = (float)abs(Velocidad_Angular.VM1 - Velocidad_Angular_Anterior.VM1) / tiempo;
+    Accel_Ang[1] = (float)abs(Velocidad_Angular.VM2 - Velocidad_Angular_Anterior.VM2) / tiempo;
+    Accel_Ang[2] = (float)abs(Velocidad_Angular.VM3 - Velocidad_Angular_Anterior.VM3) / tiempo;
+    Accel_Ang[3] = (float)abs(Velocidad_Angular.VM4 - Velocidad_Angular_Anterior.VM4) / tiempo;
+
+    Aceleracion.VM1 = trunc(Accel_Ang[0]);
+    Aceleracion.VM2 = trunc(Accel_Ang[1]);
+    Aceleracion.VM3 = trunc(Accel_Ang[2]);
+    Aceleracion.VM4 = trunc(Accel_Ang[3]);
+
+    return moverMotores();
+}
+
+bool datos_t::calcularVelocidad()
+{
+    // Velocidades angulares en pusos/s de 90 grados en el motor
+    Vel_Ang[0] = (0.0f - Velocidad_Ojetivo[0] + Velocidad_Ojetivo[1] + 0.5f * (Length + Width) * Velocidad_Ojetivo[2]) * reduccion * 2 / PI;
+    Vel_Ang[1] = (Velocidad_Ojetivo[0] + Velocidad_Ojetivo[1] - 0.5f * (Length + Width) * Velocidad_Ojetivo[2]) * reduccion * 2 / PI;
+    Vel_Ang[2] = (0.0f - Velocidad_Ojetivo[0] + Velocidad_Ojetivo[1] - 0.5f * (Length + Width) * Velocidad_Ojetivo[2]) * reduccion * 2 / PI;
+    Vel_Ang[3] = (Velocidad_Ojetivo[0] + Velocidad_Ojetivo[1] + 0.5f * (Length + Width) * Velocidad_Ojetivo[2]) * reduccion * 2 / PI;
+
+    Velocidad_Angular.VM1 = trunc(Vel_Ang[0]);
+    Velocidad_Angular.VM2 = trunc(Vel_Ang[1]);
+    Velocidad_Angular.VM3 = trunc(Vel_Ang[2]);
+    Velocidad_Angular.VM4 = trunc(Vel_Ang[3]);
+
+    return calcularAceleracion();
+}
+
 void datos_t::begin(int TX1, int RX1, int TX2, int RX2)
 {
 
@@ -33,83 +71,28 @@ bool datos_t::pararTodo()
 
 bool datos_t::actualizarVelocidad()
 {
-    Velocidad_Angular_Anterior.VM1 = roboclaw_DERECHO.ReadSpeedM1(address2);
-    Velocidad_Angular_Anterior.VM2 = roboclaw_IZQUERDO.ReadSpeedM2(address1);
-    Velocidad_Angular_Anterior.VM3 = roboclaw_IZQUERDO.ReadSpeedM1(address1);
-    Velocidad_Angular_Anterior.VM4 = roboclaw_DERECHO.ReadSpeedM2(address2);
-    // Velocidades angulares en pusos/s de 90 grados
-    Vel_Ang[0] = (0.0f - Velocidad_Ojetivo[0] + Velocidad_Ojetivo[1] + 0.5f * (Length + Width) * Velocidad_Ojetivo[2]) * 2 / PI;
-    Vel_Ang[1] = (Velocidad_Ojetivo[0] + Velocidad_Ojetivo[1] - 0.5f * (Length + Width) * Velocidad_Ojetivo[2]) * 2 / PI;
-    Vel_Ang[2] = (0.0f - Velocidad_Ojetivo[0] + Velocidad_Ojetivo[1] - 0.5f * (Length + Width) * Velocidad_Ojetivo[2]) * 2 / PI;
-    Vel_Ang[3] = (Velocidad_Ojetivo[0] + Velocidad_Ojetivo[1] + 0.5f * (Length + Width) * Velocidad_Ojetivo[2]) * 2 / PI;
 
-    Velocidad_Angular.VM1 = trunc(Vel_Ang[0]);
-    Velocidad_Angular.VM2 = trunc(Vel_Ang[1]);
-    Velocidad_Angular.VM3 = trunc(Vel_Ang[2]);
-    Velocidad_Angular.VM4 = trunc(Vel_Ang[3]);
-
-    Accel_Ang[0] = (float)abs(Velocidad_Angular.VM1 - Velocidad_Angular_Anterior.VM1) / tiempo;
-    Accel_Ang[1] = (float)abs(Velocidad_Angular.VM2 - Velocidad_Angular_Anterior.VM2) / tiempo;
-    Accel_Ang[2] = (float)abs(Velocidad_Angular.VM3 - Velocidad_Angular_Anterior.VM3) / tiempo;
-    Accel_Ang[3] = (float)abs(Velocidad_Angular.VM4 - Velocidad_Angular_Anterior.VM4) / tiempo;
-
-    Aceleracion.VM1 = trunc(Accel_Ang[0]);
-    Aceleracion.VM2 = trunc(Accel_Ang[1]);
-    Aceleracion.VM3 = trunc(Accel_Ang[2]);
-    Aceleracion.VM4 = trunc(Accel_Ang[3]);
-
-    return roboclaw_IZQUERDO.SpeedAccelM1M2_2(address1, Aceleracion.VM3, Velocidad_Angular.VM3, Aceleracion.VM2, Velocidad_Angular.VM2) &&
-           roboclaw_DERECHO.SpeedAccelM1M2_2(address2, Aceleracion.VM1, Velocidad_Angular.VM1, Aceleracion.VM4, Velocidad_Angular.VM4);
+    return calcularVelocidad();
 }
 
 bool datos_t::actualizarVelocidad(int vm1, int vm2, int vm3, int vm4)
 {
 
-    Velocidad_Angular_Anterior.VM1 = roboclaw_DERECHO.ReadSpeedM1(address2);
-    Velocidad_Angular_Anterior.VM2 = roboclaw_IZQUERDO.ReadSpeedM2(address1);
-    Velocidad_Angular_Anterior.VM3 = roboclaw_IZQUERDO.ReadSpeedM1(address1);
-    Velocidad_Angular_Anterior.VM4 = roboclaw_DERECHO.ReadSpeedM2(address2);
     // Velocidades angulares en pusos/s de 90 grados
     Velocidad_Angular.VM1 = vm1;
     Velocidad_Angular.VM2 = vm2;
     Velocidad_Angular.VM3 = vm3;
     Velocidad_Angular.VM4 = vm4;
 
-    Accel_Ang[0] = (float)abs(Velocidad_Angular.VM1 - Velocidad_Angular_Anterior.VM1) / tiempo;
-    Accel_Ang[1] = (float)abs(Velocidad_Angular.VM2 - Velocidad_Angular_Anterior.VM2) / tiempo;
-    Accel_Ang[2] = (float)abs(Velocidad_Angular.VM3 - Velocidad_Angular_Anterior.VM3) / tiempo;
-    Accel_Ang[3] = (float)abs(Velocidad_Angular.VM4 - Velocidad_Angular_Anterior.VM4) / tiempo;
-
-    Aceleracion.VM1 = trunc(Accel_Ang[0]);
-    Aceleracion.VM2 = trunc(Accel_Ang[1]);
-    Aceleracion.VM3 = trunc(Accel_Ang[2]);
-    Aceleracion.VM4 = trunc(Accel_Ang[3]);
-
-    return roboclaw_IZQUERDO.SpeedAccelM1M2_2(address1, Aceleracion.VM3, Velocidad_Angular.VM3, Aceleracion.VM2, Velocidad_Angular.VM2) &&
-           roboclaw_DERECHO.SpeedAccelM1M2_2(address2, Aceleracion.VM1, Velocidad_Angular.VM1, Aceleracion.VM4, Velocidad_Angular.VM4);
+    return calcularAceleracion();
 }
 
 bool datos_t::actualizarVelocidad(const Velocidad_t &V)
 {
-    Velocidad_Angular_Anterior.VM1 = roboclaw_DERECHO.ReadSpeedM1(address2);
-    Velocidad_Angular_Anterior.VM2 = roboclaw_IZQUERDO.ReadSpeedM2(address1);
-    Velocidad_Angular_Anterior.VM3 = roboclaw_IZQUERDO.ReadSpeedM1(address1);
-    Velocidad_Angular_Anterior.VM4 = roboclaw_DERECHO.ReadSpeedM2(address2);
 
     Velocidad_Angular = V;
 
-    Accel_Ang[0] = (float)abs(Velocidad_Angular.VM1 - Velocidad_Angular_Anterior.VM1) / tiempo;
-    Accel_Ang[1] = (float)abs(Velocidad_Angular.VM2 - Velocidad_Angular_Anterior.VM2) / tiempo;
-    Accel_Ang[2] = (float)abs(Velocidad_Angular.VM3 - Velocidad_Angular_Anterior.VM3) / tiempo;
-    Accel_Ang[3] = (float)abs(Velocidad_Angular.VM4 - Velocidad_Angular_Anterior.VM4) / tiempo;
-
-    Aceleracion.VM1 = trunc(Accel_Ang[0]);
-    Aceleracion.VM2 = trunc(Accel_Ang[1]);
-    Aceleracion.VM3 = trunc(Accel_Ang[2]);
-    Aceleracion.VM4 = trunc(Accel_Ang[3]);
-
-    return roboclaw_IZQUERDO.SpeedAccelM1M2_2(address1, Aceleracion.VM3, Velocidad_Angular.VM3, Aceleracion.VM2, Velocidad_Angular.VM2) &&
-           roboclaw_DERECHO.SpeedAccelM1M2_2(address2, Aceleracion.VM1, Velocidad_Angular.VM1, Aceleracion.VM4, Velocidad_Angular.VM4);
+    return calcularAceleracion();
 }
 
 bool datos_t::actualizarVelocidad(float VX, float VY, float WZ)
@@ -118,7 +101,7 @@ bool datos_t::actualizarVelocidad(float VX, float VY, float WZ)
     Velocidad_Ojetivo[0] = VX;
     Velocidad_Ojetivo[2] = WZ;
 
-    return true;
+    return calcularVelocidad();
 }
 
 bool datos_t::clavar()
@@ -136,7 +119,14 @@ bool datos_t::clavar(int vm1, int vm2, int vm3, int vm4)
     return clavar();
 }
 
-Velocidad_t &datos_t::obtenerVelocidad()
+bool datos_t::clavar(const Velocidad_t &V)
+{
+    Velocidad_Angular = V;
+
+    return clavar();
+}
+
+const Velocidad_t &datos_t::obtenerVelocidad()
 {
     return Velocidad_Angular;
 }
@@ -176,6 +166,12 @@ bool datos_t::modoManual()
             return true;
         }
     }
+}
+
+bool datos_t::moverMotores()
+{
+    return roboclaw_IZQUERDO.SpeedAccelM1M2_2(address1, Aceleracion.VM3, Velocidad_Angular.VM3, Aceleracion.VM2, Velocidad_Angular.VM2) &&
+           roboclaw_DERECHO.SpeedAccelM1M2_2(address2, Aceleracion.VM1, Velocidad_Angular.VM1, Aceleracion.VM4, Velocidad_Angular.VM4);
 }
 
 bool datos_t::enviarVelocidad()
@@ -248,7 +244,7 @@ bool datos_t::recibirMensaje()
             {
                 m.read_array<int>(velocidadesMotores, 4);
 
-                actualizarVelocidad(velocidadesMotores[0], velocidadesMotores[1], velocidadesMotores[2], velocidadesMotores[3]);
+                return actualizarVelocidad(velocidadesMotores[0], velocidadesMotores[1], velocidadesMotores[2], velocidadesMotores[3]);
             }
             break;
 
@@ -256,7 +252,7 @@ bool datos_t::recibirMensaje()
             {
                 m.read_array<int>(Velocidad_Ojetivo, 3);
 
-                actualizarVelocidad(Velocidad_Ojetivo[0], Velocidad_Ojetivo[1], Velocidad_Ojetivo[2]);
+                return actualizarVelocidad(Velocidad_Ojetivo[0], Velocidad_Ojetivo[1], Velocidad_Ojetivo[2]);
             }
             break;
 
