@@ -75,7 +75,7 @@ public:
     bool clavar(int vm1, int vm2, int vm3, int vm4);
     bool clavar(const Velocidad_t &V);
 
-    const Velocidad_t &obtenerVelocidad();
+    Velocidad_t obtenerVelocidad();
 
     bool pararTodo();
 

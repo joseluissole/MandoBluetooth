@@ -134,7 +134,7 @@ bool datos_t::clavar(const Velocidad_t &V)
     return clavar();
 }
 
-const Velocidad_t &datos_t::obtenerVelocidad()
+Velocidad_t datos_t::obtenerVelocidad()
 {
     return Velocidad_Angular;
 }
@@ -217,7 +217,7 @@ bool datos_t::enviarVelocidad_Objetivo()
 {
     eviarVelocidadActual(&miVelocidad[0],&miVelocidad[1],&miVelocidad[2]);
 
-    Vel_Obj.write_array<int>(miVelocidad, 3);
+    Vel_Obj.write_array<float>(miVelocidad, 3);
 
     for (int i = 0; i < Vel_Obj.datagram_size(); i++)
         HS0->write(Vel_Obj[i]);
@@ -231,7 +231,7 @@ bool datos_t::enviarVelocidad_Objetivo(float VX, float VY, float WZ)
     miVelocidad[1] = VY;
     miVelocidad[2] = WZ;
 
-    Vel_Obj.write_array<int>(miVelocidad, 3);
+    Vel_Obj.write_array<float>(miVelocidad, 3);
 
     for (int i = 0; i < Vel_Obj.datagram_size(); i++)
         HS0->write(Vel_Obj[i]);
@@ -259,7 +259,7 @@ bool datos_t::recibirMensaje()
 
             case 11:
             {
-                m.read_array<int>(miVelocidad, 3);
+                m.read_array<float>(miVelocidad, 3);
 
                 return actualizarVelocidad(miVelocidad[0], miVelocidad[1], miVelocidad[2]);
             }
