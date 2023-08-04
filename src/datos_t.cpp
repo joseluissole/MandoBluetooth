@@ -259,9 +259,9 @@ bool datos_t::recibirMensaje()
 
             case 11:
             {
-                m.read_array<int>(Velocidad_Ojetivo, 3);
+                m.read_array<int>(miVelocidad, 3);
 
-                return actualizarVelocidad(Velocidad_Ojetivo[0], Velocidad_Ojetivo[1], Velocidad_Ojetivo[2]);
+                return actualizarVelocidad(miVelocidad[0], miVelocidad[1], miVelocidad[2]);
             }
             break;
 
