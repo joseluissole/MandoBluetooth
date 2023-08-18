@@ -80,6 +80,7 @@ public:
     bool pararTodo();
 
     bool modoManual();
+    bool recibirMando();
 
     bool enviarVelocidad();
     bool enviarVelocidad(const Velocidad_t &V);

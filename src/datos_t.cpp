@@ -63,6 +63,8 @@ bool datos_t::pararTodo()
 {
 
     Velocidad_Angular.reset();
+    Aceleracion.reset();
+    
     Velocidad_Ojetivo[0] = 0.0f;
     Velocidad_Ojetivo[1] = 0.0f;
     Velocidad_Ojetivo[2] = 0.0f;
@@ -141,11 +143,7 @@ Velocidad_t datos_t::obtenerVelocidad()
 
 bool datos_t::modoManual()
 {
-    Mando.LeftX = controlador->data.analog.stick.lx;
-    Mando.LeftY = controlador->data.analog.stick.ly;
-
-    Mando.RightX = controlador->data.analog.stick.rx;
-    Mando.RightY = controlador->data.analog.stick.ry;
+    
 
     // clavada instantanea
     if (controlador->data.button.cross)
@@ -161,8 +159,13 @@ bool datos_t::modoManual()
     else
     {
         // paro
-        if (abs(Mando.LeftX) < VMin & abs(Mando.LeftY) < VMin & abs(Mando.RightX) < VMin & abs(Mando.RightY) < VMin)
+        if (abs(controlador->data.analog.stick.lx) < VMin & abs(controlador->data.analog.stick.ly) < VMin & abs(controlador->data.analog.stick.rx) < VMin & abs(controlador->data.analog.stick.ry) < VMin)
         {
+            Mando.LeftX = 0;
+            Mando.LeftY = 0;
+
+            Mando.RightX = 0;
+            Mando.RightY = 0;
             return pararTodo();
         }
         else
@@ -174,6 +177,16 @@ bool datos_t::modoManual()
             return calcularVelocidad();
         }
     }
+}
+
+bool datos_t::recibirMando()
+{
+    Mando.LeftX = controlador->data.analog.stick.lx;
+    Mando.LeftY = controlador->data.analog.stick.ly;
+
+    Mando.RightX = controlador->data.analog.stick.rx;
+    Mando.RightY = controlador->data.analog.stick.ry;
+    return true;
 }
 
 bool datos_t::moverMotores()
