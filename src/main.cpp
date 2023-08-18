@@ -48,13 +48,11 @@ int pos = 0; // variable to store the servo position
 
 // paquete de mensaje
 
-// segundo nucleo
-void segundoNucleo(void * pV);
 
 // Interrupción ante evento del mando
 void notify()
 {
-  Dato.modoManual();
+  Dato.recibirMando();
 }
 
 void onConnect()
@@ -79,19 +77,9 @@ void setup()
 
   Dato.begin(TXD1, RXD1, TXD2, RXD2);
 
-  xTaskCreate(segundoNucleo, "mi_tarea", 10000, NULL, 1, NULL);
 
-  // Serial.println("Ready.");
 }
 
-void segundoNucleo( void *pV)
-{
-  for(;;)
-  {
-    Dato.actualizarVelocidad();
-  }
-  
-}
 
 void loop()
 {
@@ -100,7 +88,12 @@ void loop()
   {
     Dato.recibirMensaje();
   }
+  else
+  {
+    Dato.modoManual();
+  }
 
+  Dato.moverMotores();
  
 
 }
